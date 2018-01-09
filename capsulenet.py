@@ -199,6 +199,15 @@ def load_mnist():
     y_test = to_categorical(y_test.astype('float32'))
     return (x_train, y_train), (x_test, y_test)
 
+def load_cifar10():
+    from keras.datasets import cifar10
+    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    x_train = x_train.astype('float32') / 255.
+    x_test = x_test.astype('float32') / 255.
+    y_train = to_categorical(y_train.astype('float32'))
+    y_test = to_categorical(y_test.astype('float32'))
+    return (x_train, y_train), (x_test, y_test)
+
 
 if __name__ == "__main__":
     import os
@@ -207,8 +216,8 @@ if __name__ == "__main__":
     from keras import callbacks
 
     # setting the hyper parameters
-    parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
-    parser.add_argument('--epochs', default=50, type=int)
+    parser = argparse.ArgumentParser(description="Capsule Network.")
+    parser.add_argument('--epochs', default=20, type=int)
     parser.add_argument('--batch_size', default=100, type=int)
     parser.add_argument('--lr', default=0.001, type=float,
                         help="Initial learning rate")
@@ -236,7 +245,8 @@ if __name__ == "__main__":
         os.makedirs(args.save_dir)
 
     # load data
-    (x_train, y_train), (x_test, y_test) = load_mnist()
+    # (x_train, y_train), (x_test, y_test) = load_mnist()
+    (x_train, y_train), (x_test, y_test) = load_cifar10()
 
     # define model
     model, eval_model, manipulate_model = CapsNet(input_shape=x_train.shape[1:],
