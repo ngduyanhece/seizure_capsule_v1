@@ -210,8 +210,8 @@ def load_cifar10():
     return (x_train, y_train), (x_test, y_test)
 
 def load_seizure():
-    ictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "1_ictal" in file_i][0:500]
-    interictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "1_interictal" in file_i][0:500]
+    ictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "1_ictal" in file_i][0:1000]
+    interictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "1_interictal" in file_i][0:1000]
     ictal_array = []
     interictal_array = []
     for ictal_file in ictal_files:
@@ -232,10 +232,10 @@ def load_seizure():
     X = np.concatenate((ictal_array,interictal_array))
     y = np.concatenate((ictal_labels,interictal_labels))
     X,y = shuffle(X,y)
-    X_train = X[0:-100]
-    y_train = y[0:-100]
-    X_test = X[-100:]
-    y_test = y[-100:]
+    X_train = X[0:-200]
+    y_train = y[0:-200]
+    X_test = X[-200:]
+    y_test = y[-200:]
     y_train = to_categorical(y_train.astype('float32'))
     y_test = to_categorical(y_test.astype('float32'))
     return (X_train, y_train), (X_test, y_test)
