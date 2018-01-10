@@ -24,10 +24,11 @@ import matplotlib.pyplot as plt
 from utils import combine_images
 from PIL import Image
 from capsulelayers import CapsuleLayer, PrimaryCap, Length, Mask
-
+from sklearn.utils import shuffle
 K.set_image_data_format('channels_last')
 
-
+# SEIZURE_DATA_PATH = "/Users/dapxichlo/Desktop/My_own/seizure_data"
+SEIZURE_DATA_PATH = "/home/andy/own/seizure_data"
 def CapsNet(input_shape, n_class, routings):
     """
     A Capsule Network on MNIST.
@@ -208,6 +209,37 @@ def load_cifar10():
     y_test = to_categorical(y_test.astype('float32'))
     return (x_train, y_train), (x_test, y_test)
 
+def load_seizure():
+    ictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "1_ictal" in file_i][0:500]
+    interictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "1_interictal" in file_i][0:500]
+    ictal_array = []
+    interictal_array = []
+    for ictal_file in ictal_files:
+        ictal_file_path = os.path.join(SEIZURE_DATA_PATH,ictal_file)
+        data = np.load(ictal_file_path)
+        if data.shape[-1] == 22:
+            ictal_array.append(data)
+    for interictal_file in interictal_files:
+        interictal_file_path = os.path.join(SEIZURE_DATA_PATH,interictal_file)
+        data = np.load(interictal_file_path)
+        if data.shape[-1] == 22:
+            interictal_array.append(data)
+
+    ictal_array = np.array(ictal_array)
+    interictal_array = np.array(interictal_array)
+    ictal_labels = np.zeros(ictal_array.shape[0])
+    interictal_labels = np.ones(interictal_array.shape[0])
+    X = np.concatenate((ictal_array,interictal_array))
+    y = np.concatenate((ictal_labels,interictal_labels))
+    X,y = shuffle(X,y)
+    X_train = X[0:-100]
+    y_train = y[0:-100]
+    X_test = X[-100:]
+    y_test = y[-100:]
+    y_train = to_categorical(y_train.astype('float32'))
+    y_test = to_categorical(y_test.astype('float32'))
+    return (X_train, y_train), (X_test, y_test)
+
 
 if __name__ == "__main__":
     import os
@@ -246,7 +278,7 @@ if __name__ == "__main__":
 
     # load data
     # (x_train, y_train), (x_test, y_test) = load_mnist()
-    (x_train, y_train), (x_test, y_test) = load_cifar10()
+    (x_train, y_train), (x_test, y_test) = load_seizure()
 
     # define model
     model, eval_model, manipulate_model = CapsNet(input_shape=x_train.shape[1:],
