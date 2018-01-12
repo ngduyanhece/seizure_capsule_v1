@@ -210,8 +210,8 @@ def load_cifar10():
     return (x_train, y_train), (x_test, y_test)
 
 def load_seizure():
-    ictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "1_ictal" in file_i][0:1000]
-    interictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "1_interictal" in file_i][0:1000]
+    ictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "_ictal" in file_i][0:2000]
+    interictal_files = [file_i for file_i in os.listdir(SEIZURE_DATA_PATH) if "_interictal" in file_i][0:2000]
     ictal_array = []
     interictal_array = []
     for ictal_file in ictal_files:

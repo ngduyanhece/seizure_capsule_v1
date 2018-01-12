@@ -2,7 +2,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 import csv
 import math
-
+import matplotlib
+matplotlib.use('Agg')
 def plot_log(filename, show=True):
     # load data
     keys = []
